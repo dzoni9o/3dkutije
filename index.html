@@ -3,107 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mala 3D Fabrika · Modularne kutijice</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;800&display=swap">
+<meta name="theme-color" content="#0a0a0a">
+<title>3D kutije · kutijice za fioke i police</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <div class="wiz" id="wiz" hidden></div>
-<div class="wrap">
-  <header>
-    <div class="logo">MALA <b>3D</b> FABRIKA</div>
-    <div class="sub">Kutijice za fioke i police · STL za 3D štampu</div>
-    <button type="button" class="mini" id="wiz-open">↺ Počni iznova</button>
-  </header>
 
-  <div class="cols">
-    <div class="panel steps">
-      <section class="step">
-        <h2><i>1</i> Prostor</h2>
-        <div class="row2">
-          <label class="num"><span>Širina</span><span class="in"><input type="number" id="W" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
-          <label class="num"><span>Dubina</span><span class="in"><input type="number" id="D" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
-          <label class="num"><span>Visina</span><span class="in"><input type="number" id="H" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
+<header class="top">
+  <div class="brand"><span class="mark"></span><b>3D</b> KUTIJE</div>
+  <p class="tagline">Kutijice po meri tvoje fioke, spremne za štampu</p>
+  <button type="button" class="btn-ghost" id="wiz-open">↺ Počni iznova</button>
+</header>
+
+<main class="layout">
+  <!-- 1. fioka -->
+  <section class="card space">
+    <div class="space-main">
+      <div class="lbl"><span class="n">1</span> Tvoja fioka</div>
+      <div class="dims">
+        <label class="num big"><span>Širina</span><span class="in"><input type="number" id="W" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
+        <span class="x">×</span>
+        <label class="num big"><span>Dubina</span><span class="in"><input type="number" id="D" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
+        <span class="x">×</span>
+        <label class="num big"><span>Visina</span><span class="in"><input type="number" id="H" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
+      </div>
+    </div>
+    <div class="space-side">
+      <label class="field"><span>Štampač</span>
+        <select id="bed"><option value="256">Bambu Lab A1 · 256 mm</option><option value="180">Bambu Lab A1 mini · 180 mm</option><option value="220">Ne znam · 220 mm</option><option value="350">Veliki štampač · 350 mm</option></select>
+      </label>
+      <div class="field"><span>Kutijice</span>
+        <div class="seg" id="preset" role="group" aria-label="Čvrstoća">
+          <button type="button" data-v="jaka" aria-pressed="true">Čvrste</button>
+          <button type="button" data-v="lagana" aria-pressed="false">Štedljive</button>
         </div>
-        <p class="hint">Unutrašnja mera fioke ili police. Sve ostalo podešavaš direktno na planu: vuci ivice, klikni kutijicu, klikni mere.</p>
-</section>
+      </div>
+      <p class="hint" id="preset-hint"></p>
+    </div>
+  </section>
 
-      <details class="step adv2"><summary>Fino podešavanje štampe</summary>
-        <label class="num"><span>Štampač (najveća ploča)</span><span class="in"><select id="bed"><option value="256">Bambu Lab A1 (256 mm)</option><option value="180">Bambu Lab A1 mini (180 mm)</option><option value="220">Ne znam (220 mm)</option><option value="350">Veliki štampač (350 mm)</option></select></span></label>
+  <!-- 2. raspored -->
+  <section class="card plan">
+    <div class="plan-head">
+      <div class="lbl"><span class="n">2</span> Raspored</div>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab2d" aria-selected="true">Odozgo</button>
+        <button type="button" role="tab" id="tab3d" aria-selected="false">3D</button>
+      </div>
+      <div class="opts" id="opts3d" hidden>
+        <label class="chk"><input type="checkbox" id="o-lid" checked> Poklopci</label>
+        <label class="slider">Podigni <input type="range" id="o-exp" min="0" max="60" value="0"></label>
+      </div>
+    </div>
+    <div class="toolbar" id="ptools">
+      <button type="button" class="tb" id="add-box"><i>+</i> Kutijica</button>
+      <button type="button" class="tb" id="add-row"><i>+</i> Red</button>
+      <button type="button" class="tb" id="grid-toggle"><i>▦</i> Mreža</button>
+      <span class="gridform" id="gridform" hidden>
+        <input type="number" id="g-c" value="3" min="1" max="12" inputmode="numeric" aria-label="kolone"><span>×</span>
+        <input type="number" id="g-r" value="2" min="1" max="12" inputmode="numeric" aria-label="redovi">
+        <button type="button" class="tb on" id="grid">Napravi</button>
+      </span>
+      <span class="sp stage-hint">Klikni kutijicu da je urediš. Vuci žutu crticu da promeniš veličinu.</span>
+      <button type="button" class="tb" id="all-lids" aria-pressed="false">Svi poklopci</button>
+    </div>
+    <div class="planwrap" id="planwrap">
+      <div class="stage" id="stage">
+        <div class="badge busy" id="badge"><span class="dot"></span><span id="badge-t">Učitavam…</span></div>
+        <svg id="v2d" role="img" aria-label="Raspored odozgo" xmlns="http://www.w3.org/2000/svg"></svg>
+        <canvas id="v3d" hidden></canvas>
+        <div class="tip" id="tip" hidden></div>
+        <div class="err" id="err" hidden></div>
+      </div>
+      <aside class="pop" id="pop">
+        <div class="pop-h"><span>Izabrana kutijica</span><button type="button" class="icon" id="pop-x" aria-label="sakrij">–</button></div>
+        <div id="editor"></div>
+      </aside>
+    </div>
+  </section>
 
-        <div class="seg" id="preset" role="group" aria-label="Varijanta">
-          <button type="button" data-v="jaka" aria-pressed="true">Jaka</button>
-          <button type="button" data-v="lagana" aria-pressed="false">Laka i brza</button>
-        </div>
-        <p class="hint" id="preset-hint"></p>
-        <div class="row2">
+  <!-- 3. preuzimanje -->
+  <section class="card result" id="result">
+    <div class="lbl"><span class="n">3</span> Preuzmi</div>
+    <div class="issues" id="issues"></div>
+    <div class="sum" id="sum"></div>
+    <div class="dlbar">
+      <button type="button" class="btn" id="dl" disabled>Preuzmi fajlove za štampu</button>
+      <span class="msg" id="dlmsg"></span>
+    </div>
+    <details class="fold"><summary>Kako da štampam?</summary>
+      <div class="fold-b"><ol class="howto">
+        <li>Otvori ZIP. Svaka kutijica ima svoj folder.</li>
+        <li>Prevuci <code>_telo.stl</code> u program za štampu (Bambu Studio, Orca…).</li>
+        <li>Kutijicu ostavi otvorom nagore. Podupirači nisu potrebni.</li>
+        <li>Poklopac (<code>_poklopac.stl</code>) štampaj ravnom stranom nadole.</li>
+      </ol></div>
+    </details>
+    <details class="fold"><summary>Spisak delova</summary><div class="fold-b tw"><table class="parts" id="parts"></table></div></details>
+    <details class="fold"><summary>Za iskusne: debljine i tolerancije</summary>
+      <div class="fold-b">
+        <div class="grid3">
           <label class="num"><span>Zid</span><span class="in"><input type="number" id="p-zid" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
           <label class="num"><span>Dno</span><span class="in"><input type="number" id="p-dno" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
           <label class="num"><span>Pregrada</span><span class="in"><input type="number" id="p-pregrada" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
           <label class="num"><span>Poklopac</span><span class="in"><input type="number" id="p-poklopac" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
           <label class="num"><span>Usna poklopca</span><span class="in"><input type="number" id="p-usna" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
-          <label class="num"><span>Tolerancija poklopca</span><span class="in"><input type="number" id="p-tol" step="0.05" inputmode="decimal"><span class="u">mm</span></span></label>
+          <label class="num"><span>Labavost poklopca</span><span class="in"><input type="number" id="p-tol" step="0.05" inputmode="decimal"><span class="u">mm</span></span></label>
+          <label class="num"><span>Razmak u fioci</span><span class="in"><input type="number" id="gap" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
         </div>
-        <label class="num"><span>Zazor između kutijica (u fioci)</span><span class="in"><input type="number" id="gap" step="0.1" inputmode="decimal"><span class="u">mm</span></span></label>
-        <button type="button" class="mini" id="reset">Vrati početno stanje</button>
-      </details>
-    </div>
-
-    <div class="view">
-      <div class="panel">
-        <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab2d" aria-selected="true">2D plan</button>
-          <button type="button" role="tab" id="tab3d" aria-selected="false">3D model</button>
-          <div class="opts" id="opts3d" hidden>
-            <label><input type="checkbox" id="o-lid" checked> Poklopci</label>
-            <span class="slider">Razmak <input type="range" id="o-exp" min="0" max="60" value="0"></span>
-          </div>
-        </div>
-        <div class="planwrap" id="planwrap">
-        <div class="stage" id="stage">
-          <div class="ptools" id="ptools">
-            <button type="button" class="mini" id="add-row">+ red</button>
-            <button type="button" class="mini" id="add-box">+ kutijica</button>
-            <button type="button" class="mini" id="all-lids" aria-pressed="false">Svi poklopci</button>
-            <button type="button" class="mini" id="grid-toggle">Mreža</button>
-            <span class="gridform" id="gridform" hidden>
-              <input type="number" id="g-c" value="3" min="1" max="12" inputmode="numeric" aria-label="kolone"> ×
-              <input type="number" id="g-r" value="2" min="1" max="12" inputmode="numeric" aria-label="redovi">
-              <button type="button" class="mini" id="grid">OK</button>
-            </span>
-          </div>
-          <div class="badge busy" id="badge"><span class="dot"></span><span id="badge-t">Učitavam…</span></div>
-          <svg id="v2d" role="img" aria-label="Raspored odozgo" xmlns="http://www.w3.org/2000/svg"></svg>
-          <canvas id="v3d" hidden></canvas>
-          <div class="tip" id="tip" hidden></div>
-          <div class="err" id="err" hidden></div>
-        </div>
-        <aside class="pop" id="pop"><div class="pop-h"><span>Izabrana kutijica</span><button type="button" class="mini" id="pop-x" aria-label="sakrij">–</button></div><div id="editor"></div></aside>
-        </div>
-        <div class="legend">
-          <span class="tipline">⇔ uhvati ivicu između kutijica i prevuci (Shift = fino, dvoklik = auto)</span>
-          <span><i style="background:var(--accent)"></i> izabrana</span>
-          <span><i style="background:var(--lidc)"></i> poklopac</span>
-          <span><i style="border-top:2px dashed var(--mute);height:0;width:12px"></i> pregrade</span>
-          <span><i style="background:var(--bad)"></i> problem</span>
-        </div>
+        <button type="button" class="btn-ghost danger" id="reset">Obriši sve i počni od početka</button>
       </div>
-
-      <div class="panel result" id="result">
-        <h2>Da li je sve u redu?</h2>
-        <div class="issues" id="issues"></div>
-        <div class="sum" id="sum"></div>
-        <details class="adv"><summary>Spisak delova</summary><div class="tw"><table class="parts" id="parts"></table></div></details>
-        <div class="btnrow">
-          <button type="button" class="btn" id="dl" disabled>Preuzmi fajlove za štampu</button>
-          <span class="msg" id="dlmsg"></span>
-        </div>
-        <details class="adv"><summary>Kako da štampam?</summary><p class="note">Dobićeš ZIP sa po jednim folderom za svaku kutijicu. Kutijicu štampaj okrenutu otvorom nagore, bez podupirača. Poklopac štampaj ravnom stranom nadole.</p></details>
-      </div>
-    </div>
-  </div>
-</div>
+    </details>
+  </section>
+</main>
 
 <script src="./lib/three.min.js"></script>
 <script src="./lib/OrbitControls.js"></script>

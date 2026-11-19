@@ -100,32 +100,39 @@ function buildEditor() {
   if (!f.box) { $('editor').innerHTML = ''; builtFor = null; return; }
   builtFor = sel;
   $('editor').innerHTML = `<div class="editor">
-    <h3 id="ed-title"></h3>
-    <div class="row2">${field('w', 'Širina', 'mm')}${field('d', 'Dubina', 'mm')}${field('h', 'Visina', 'mm')}</div>
-    <div class="row2">
-      <label class="num"><span>Pregrade ↔</span><span class="in"><input type="number" data-k="cx" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
-      <label class="num"><span>Pregrade ↕</span><span class="in"><input type="number" data-k="cy" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
-      ${field('r', 'Zaobljenje', 'mm')}
+    <div class="ed-title" id="ed-title"></div>
+    <div class="grp"><h4>Veličina</h4>
+      <div class="row3">${field('w', 'Širina', 'mm')}${field('d', 'Dubina', 'mm')}${field('h', 'Visina', 'mm')}</div>
     </div>
-    <div class="row2">${field('zid', 'Debljina zida', 'mm', 'placeholder="opšta"')}${field('nagib', 'Kos zid', 'mm')}</div>
-    <label class="chk"><input type="checkbox" data-k="rub"> Rub pri vrhu</label>
-    <div><div class="hint" style="margin-bottom:4px">Tekstura zida</div>
-      <div class="seg" id="ed-tex" role="group" aria-label="Tekstura">
-        <button type="button" data-tex="nema">Bez</button><button type="button" data-tex="zlebovi">Žlebovi</button><button type="button" data-tex="pruge">Pruge</button>
+    <div class="grp"><h4>Pregrade unutra</h4>
+      <div class="row2">
+        <label class="num"><span>Levo–desno</span><span class="in"><input type="number" data-k="cx" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
+        <label class="num"><span>Napred–nazad</span><span class="in"><input type="number" data-k="cy" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
       </div>
     </div>
-    <label class="chk"><input type="checkbox" data-k="lid"> Poklopac (nasadni, sa usnom)</label>
-    <div><div class="hint" style="margin-bottom:4px">Ručka</div>
+    <div class="grp"><h4>Izgled</h4>
+      <div class="seg" id="ed-tex" role="group" aria-label="Zidovi">
+        <button type="button" data-tex="nema">Glatki</button><button type="button" data-tex="zlebovi">Žlebovi</button><button type="button" data-tex="pruge">Pruge</button>
+      </div>
+      <label class="chk"><input type="checkbox" data-k="rub"> Rub pri vrhu</label>
+      <div class="row2">${field('nagib', 'Kosi zid', 'mm')}${field('r', 'Zaobljen ugao', 'mm')}</div>
+    </div>
+    <div class="grp"><h4>Poklopac i ručka</h4>
+      <label class="chk"><input type="checkbox" data-k="lid"> Poklopac</label>
       <div class="seg" id="ed-handle" role="group" aria-label="Ručka">
-        <button type="button" data-handle="nema">Bez</button><button type="button" data-handle="rupa">Rupa za prst</button><button type="button" data-handle="rucka">Ručka</button>
+        <button type="button" data-handle="nema">Bez ručke</button><button type="button" data-handle="rupa">Rupa za prst</button><button type="button" data-handle="rucka">Ručka</button>
       </div>
-      <p class="hint" id="ed-handle-hint" style="margin-top:4px"></p>
+      <p class="hint" id="ed-handle-hint"></p>
     </div>
-    
-    <div class="btnrow">
-      <button type="button" class="mini" data-do="styleAll">Stil svima</button>
-      <button type="button" class="mini" data-do="split">Podeli na 2</button>
-      <button type="button" class="mini danger" data-do="remove">Ukloni</button>
+    <div class="grp"><h4>Za iskusne</h4>
+      <div class="row2">${field('zid', 'Debljina zida', 'mm', 'placeholder="opšta"')}</div>
+    </div>
+    <div class="grp">
+      <div class="btnrow">
+        <button type="button" class="mini" data-do="split">Podeli na 2</button>
+        <button type="button" class="mini" data-do="styleAll">Isti izgled svima</button>
+        <button type="button" class="mini danger" data-do="remove">Ukloni</button>
+      </div>
     </div>
   </div>`;
   syncEditor();
@@ -138,7 +145,7 @@ function syncEditor() {
   const E = $('editor');
   const q = (k) => E.querySelector(`[data-k="${k}"]`);
   const put = (el, v) => { if (el && document.activeElement !== el) el.value = v; };
-  $('ed-title').textContent = `${B.label} · ${fmt(B.ow)} × ${fmt(B.od)} × ${fmt(B.h)} mm`;
+  $('ed-title').innerHTML = `<b>${B.label}</b><span>${fmt(B.ow)} × ${fmt(B.od)} × ${fmt(B.h)} mm</span>`;
   const singleBox = f.row.boxes.length < 2, singleRow = S.rows.length < 2;
   put(q('w'), b.fix && !singleBox ? b.w : B.w); q('w').readOnly = singleBox;
   put(q('d'), f.row.fix && !singleRow ? f.row.d : R.d); q('d').readOnly = singleRow;
@@ -147,15 +154,15 @@ function syncEditor() {
   E.querySelectorAll('#ed-tex button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.tex === (b.tex || 'nema'))));
   q('w').classList.toggle('bad', b.fix && !singleBox && Math.abs(b.w - B.w) > 0.05);
   q('h').classList.toggle('bad', B.h > S.H + 1e-6);
-  E.querySelector('[data-tag="w"]').innerHTML = singleBox ? '<span class="hint">jedina u redu</span>' : (b.fix ? '<button type="button" class="fixed-tag" data-do="unfixW">ručno · vrati na auto</button>' : '<span class="hint">auto</span>');
-  E.querySelector('[data-tag="d"]').innerHTML = singleRow ? '<span class="hint">jedini red</span>' : (f.row.fix ? '<button type="button" class="fixed-tag" data-do="unfixD">ručno · vrati na auto</button>' : '<span class="hint">auto</span>');
-  E.querySelector('[data-tag="h"]').innerHTML = b.h != null ? '<button type="button" class="fixed-tag" data-do="autoH">ručno · visina prostora</button>' : '<span class="hint">visina prostora</span>';
+  E.querySelector('[data-tag="w"]').innerHTML = singleBox ? '<span class="hint">cela širina</span>' : (b.fix ? '<button type="button" class="fixed-tag" data-do="unfixW">zaključano · otključaj</button>' : '<span class="hint">auto</span>');
+  E.querySelector('[data-tag="d"]').innerHTML = singleRow ? '<span class="hint">cela dubina</span>' : (f.row.fix ? '<button type="button" class="fixed-tag" data-do="unfixD">zaključano · otključaj</button>' : '<span class="hint">auto</span>');
+  E.querySelector('[data-tag="h"]').innerHTML = b.h != null ? '<button type="button" class="fixed-tag" data-do="autoH">ručno · vrati</button>' : '<span class="hint">kao fioka</span>';
   E.querySelectorAll('#ed-handle button').forEach((x) => {
     x.setAttribute('aria-pressed', String(x.dataset.handle === b.handle));
     x.disabled = x.dataset.handle === 'rucka' && !R.front;
   });
-  $('ed-handle-hint').textContent = b.handle === 'rupa' ? (b.lid ? 'Okrugla rupa Ø14 u prednjem zidu.' : 'Otvoren žleb od ivice prednjeg zida.')
-    : b.handle === 'rucka' ? 'Klin 20 × 6 mm na prednjem zidu, izlazi 6 mm napred.' : (R.front ? '' : 'Ručka (izbočena) samo u prednjem redu.');
+  $('ed-handle-hint').textContent = b.handle === 'rupa' ? (b.lid ? 'Okrugla rupa na prednjoj strani.' : 'Udubljenje na prednjoj ivici, za prst.')
+    : b.handle === 'rucka' ? 'Mala ručka viri 6 mm napred.' : (R.front ? '' : 'Ručka može samo u prednjem redu.');
 }
 $('editor').addEventListener('input', (e) => {
   const k = e.target.dataset && e.target.dataset.k; if (!k || e.target.type === 'checkbox') return;
@@ -202,22 +209,23 @@ function draw2d() {
   const pad = Math.max(W, D) * 0.09, fs = Math.max(W, D) / 40;
   svg.setAttribute('viewBox', vbFreeze || `${-pad} ${-pad} ${W + 2 * pad} ${D + 2 * pad + fs * 1.6}`);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  if (!vbFreeze) $('stage').style.setProperty('--ar', String(Math.max(0.6, Math.min(2.4, (W + 2 * pad) / (D + 2 * pad + fs * 1.6)))));
   let s = `<rect x="0" y="0" width="${W}" height="${D}" fill="none" stroke="var(--mute)" stroke-width="1" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>`;
   s += `<text class="dimlbl" data-k="W" x="${W / 2}" y="${-pad * 0.35}" text-anchor="middle" font-size="${fs}" fill="var(--mute)">↔ ${fmt(W)} mm</text>`;
   s += `<text class="dimlbl" data-k="D" transform="translate(${-pad * 0.35} ${D / 2}) rotate(-90)" text-anchor="middle" font-size="${fs}" fill="var(--mute)">↕ ${fmt(D)} mm</text>`;
   s += `<text class="dimlbl" data-k="H" x="${W}" y="${-pad * 0.35}" text-anchor="end" font-size="${fs}" fill="var(--mute)">visina ${fmt(S.H)} mm</text>`;
-  s += `<text x="${W / 2}" y="${D + pad * 0.55 + fs}" text-anchor="middle" font-size="${fs * 0.85}" fill="var(--mute)" letter-spacing="2">▼ NAPRED (prednja strana)</text>`;
+  s += `<text x="${W / 2}" y="${D + pad * 0.55 + fs}" text-anchor="middle" font-size="${fs * 0.85}" fill="var(--mute)" letter-spacing="2">▼ PREDNJA STRANA</text>`;
   RES.rows.forEach((R) => R.boxes.forEach((B) => {
     const b = B.src, x = B.x + g / 2, y = R.ytop + g / 2, w = B.ow, d = B.od;
     const bad = B.problems.includes('err'), warn = B.problems.includes('warn'), on = B.id === sel;
     const stroke = on ? 'var(--accent)' : bad ? 'var(--bad)' : warn ? 'var(--warn)' : 'var(--boxline)';
     s += `<g class="bx${on ? ' sel' : ''}" data-id="${B.id}">`;
-    s += `<rect x="${x}" y="${y}" width="${Math.max(w, 0.1)}" height="${Math.max(d, 0.1)}" rx="${Math.min(b.r, w / 2, d / 2)}" fill="${bad ? 'rgba(255,106,95,.14)' : 'var(--box)'}" stroke="${stroke}" stroke-width="${on ? 3 : 1.5}" vector-effect="non-scaling-stroke"/>`;
+    s += `<rect x="${x}" y="${y}" width="${Math.max(w, 0.1)}" height="${Math.max(d, 0.1)}" rx="${Math.min(b.r, w / 2, d / 2)}" fill="${bad ? 'rgba(255,107,97,.14)' : 'var(--box)'}" stroke="${stroke}" stroke-width="${on ? 2.5 : 1.2}" vector-effect="non-scaling-stroke"/>`;
     const t = B.t, iw = w - 2 * t, id = d - 2 * t;
     if (iw > 1 && id > 1) {
       const cw = (iw - (b.cx - 1) * S.print.pregrada) / b.cx, ch = (id - (b.cy - 1) * S.print.pregrada) / b.cy;
       for (let i = 0; i < b.cx; i++) for (let j = 0; j < b.cy; j++) {
-        s += `<rect x="${x + t + i * (cw + S.print.pregrada)}" y="${y + t + (b.cy - 1 - j) * (ch + S.print.pregrada)}" width="${Math.max(cw, 0.1)}" height="${Math.max(ch, 0.1)}" fill="${b.lid ? 'rgba(91,143,191,.28)' : 'rgba(0,0,0,.35)'}" stroke="var(--boxline)" stroke-opacity=".5" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
+        s += `<rect x="${x + t + i * (cw + S.print.pregrada)}" y="${y + t + (b.cy - 1 - j) * (ch + S.print.pregrada)}" width="${Math.max(cw, 0.1)}" height="${Math.max(ch, 0.1)}" fill="${b.lid ? 'rgba(111,159,208,.22)' : 'rgba(0,0,0,.4)'}" stroke="var(--boxline)" stroke-opacity=".35" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
       }
     }
     // ručka na prednjoj (donjoj) ivici
@@ -328,11 +336,11 @@ let DEL = [];
 function renderIssues() {
   const I = RES.issues;
   const el = $('issues');
-  if (!I.length) { el.innerHTML = '<div class="issue ok">Sve staje: kutijice popunjavaju prostor i svaki deo staje na ploču.</div>'; return; }
+  if (!I.length) { el.innerHTML = '<div class="issue ok">✓ Sve je u redu. Kutijice popunjavaju fioku i svaka staje na štampač.</div>'; return; }
   const fixes = [];
   el.innerHTML = I.map((i, n) => {
     if (i.fix) fixes[n] = i.fix;
-    return `<div class="issue is${i.sev}"><span class="msg2">${i.sev === 'err' ? 'Ne ide: ' : 'Pažnja: '}${i.msg}</span>${i.fix ? `<span><button type="button" class="mini" data-fix="${n}">Predlog: ${i.fix.label}</button></span>` : ''}</div>`;
+    return `<div class="issue is${i.sev}"><span class="msg2">${i.msg}</span>${i.fix ? `<span><button type="button" class="mini" data-fix="${n}">${i.fix.label}</button></span>` : ''}</div>`;
   }).join('');
   el.onclick = (e) => { const b = e.target.closest('[data-fix]'); if (!b) return; const f = fixes[+b.dataset.fix]; if (f) go({ ...f }); };
 }
@@ -354,8 +362,8 @@ function renderResult() {
   $('sum').innerHTML = `
     <div><b>${DEL.length}</b><span>kutijica</span></div>
     <div><b>${n || '…'}</b><span>delova za štampu</span></div>
-    <div><b>≈ ${Math.round(g)} g</b><span>PLA, ukupno</span></div>
-    <div><b>≈ ${Math.floor(secs / 3600)} h ${Math.round((secs % 3600) / 60)} min</b><span>vreme štampe (procena)</span></div>`;
+    <div><b>≈ ${Math.round(g)} g</b><span>plastike (PLA)</span></div>
+    <div><b>≈ ${Math.floor(secs / 3600)} h ${Math.round((secs % 3600) / 60)} min</b><span>štampanja, otprilike</span></div>`;
   $('parts').innerHTML = `<thead><tr><th>Kutijica</th><th>Spoljna mera, mm</th><th>Pregrade</th><th></th><th>Masa · vreme</th></tr></thead><tbody>${rows.join('')}</tbody>`;
   $('dl').disabled = !(RES.ok && DEL.length && DEL.every((d) => cache.has(keyOf(d.p))));
   $('dlmsg').textContent = RES.ok ? '' : 'Prvo reši greške iznad.';

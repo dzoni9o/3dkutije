@@ -16,7 +16,7 @@ const OBLICI = [
   ['zlebovi', 'Kose sa žlebovima', 'Isto, plus uspravni žlebovi na zidovima.'],
 ];
 
-const DRAWER = `<svg viewBox="0 0 320 190" class="wz-draw" aria-hidden="true">
+const DRAWER = `<svg viewBox="-30 0 330 190" class="wz-draw" aria-hidden="true">
   <g fill="none" stroke="#9a9a90" stroke-width="2">
     <path d="M40 70 L200 70 L270 30 L110 30 Z"/><path d="M40 70 L40 150 L200 150 L200 70"/><path d="M200 150 L270 110 L270 30"/>
   </g>
