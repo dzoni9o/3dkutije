@@ -3,26 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#f6f7fb">
 <title>3D kutije · kutijice za fioke i police</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <div class="wiz" id="wiz" hidden></div>
 
-<header class="top">
-  <div class="brand"><span class="mark"></span><b>3D</b> KUTIJE</div>
-  <p class="tagline">Kutijice po meri tvoje fioke, spremne za štampu</p>
-  <button type="button" class="btn-ghost" id="wiz-open">↺ Počni iznova</button>
-</header>
-
+<div class="app">
+<aside class="side">
+  <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 8l8-4 8 4v8l-8 4-8-4z M4 8l8 4 8-4 M12 12v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>3D kutije</div>
+  <div class="ws"><span>Projekat</span><b id="ws-name">Moja fioka</b></div>
+  <nav class="nav">
+    <a href="#s-fioka" class="on"><i class="ic c1">▭</i> Fioka</a>
+    <a href="#s-raspored"><i class="ic c2">▦</i> Raspored</a>
+    <a href="#s-preuzmi"><i class="ic c3">↓</i> Preuzmi</a>
+  </nav>
+  <div class="side-foot">
+    <button type="button" class="nav-btn" id="wiz-open"><i class="ic c4">↺</i> Počni iznova</button>
+  </div>
+</aside>
+<div class="main">
+  <div class="banner"><span class="bi">i</span><p><b>Kako radi:</b> upiši mere fioke, klikni kutijicu da je urediš, pa preuzmi fajlove za štampu.</p></div>
 <main class="layout">
   <!-- 1. fioka -->
-  <section class="card space">
+  <section class="card space" id="s-fioka">
     <div class="space-main">
       <div class="lbl"><span class="n">1</span> Tvoja fioka</div>
       <div class="dims">
@@ -48,7 +57,7 @@
   </section>
 
   <!-- 2. raspored -->
-  <section class="card plan">
+  <section class="card plan" id="s-raspored">
     <div class="plan-head">
       <div class="lbl"><span class="n">2</span> Raspored</div>
       <div class="tabs" role="tablist">
@@ -69,7 +78,7 @@
         <input type="number" id="g-r" value="2" min="1" max="12" inputmode="numeric" aria-label="redovi">
         <button type="button" class="tb on" id="grid">Napravi</button>
       </span>
-      <span class="sp stage-hint">Klikni kutijicu da je urediš. Vuci žutu crticu da promeniš veličinu.</span>
+      <span class="sp stage-hint">Klikni kutijicu da je urediš. Vuci plavu crticu da promeniš veličinu.</span>
       <button type="button" class="tb" id="all-lids" aria-pressed="false">Svi poklopci</button>
     </div>
     <div class="planwrap" id="planwrap">
@@ -88,7 +97,7 @@
   </section>
 
   <!-- 3. preuzimanje -->
-  <section class="card result" id="result">
+  <section class="card result" id="result"><span id="s-preuzmi" class="anchor"></span>
     <div class="lbl"><span class="n">3</span> Preuzmi</div>
     <div class="issues" id="issues"></div>
     <div class="sum" id="sum"></div>
@@ -121,6 +130,8 @@
     </details>
   </section>
 </main>
+</div>
+</div>
 
 <script src="./lib/three.min.js"></script>
 <script src="./lib/OrbitControls.js"></script>

@@ -220,12 +220,12 @@ function draw2d() {
     const bad = B.problems.includes('err'), warn = B.problems.includes('warn'), on = B.id === sel;
     const stroke = on ? 'var(--accent)' : bad ? 'var(--bad)' : warn ? 'var(--warn)' : 'var(--boxline)';
     s += `<g class="bx${on ? ' sel' : ''}" data-id="${B.id}">`;
-    s += `<rect x="${x}" y="${y}" width="${Math.max(w, 0.1)}" height="${Math.max(d, 0.1)}" rx="${Math.min(b.r, w / 2, d / 2)}" fill="${bad ? 'rgba(255,107,97,.14)' : 'var(--box)'}" stroke="${stroke}" stroke-width="${on ? 2.5 : 1.2}" vector-effect="non-scaling-stroke"/>`;
+    s += `<rect x="${x}" y="${y}" width="${Math.max(w, 0.1)}" height="${Math.max(d, 0.1)}" rx="${Math.min(b.r, w / 2, d / 2)}" fill="${bad ? 'var(--badbg)' : on ? 'var(--accent-soft)' : 'var(--box)'}" stroke="${stroke}" stroke-width="${on ? 2.5 : 1.2}" vector-effect="non-scaling-stroke"/>`;
     const t = B.t, iw = w - 2 * t, id = d - 2 * t;
     if (iw > 1 && id > 1) {
       const cw = (iw - (b.cx - 1) * S.print.pregrada) / b.cx, ch = (id - (b.cy - 1) * S.print.pregrada) / b.cy;
       for (let i = 0; i < b.cx; i++) for (let j = 0; j < b.cy; j++) {
-        s += `<rect x="${x + t + i * (cw + S.print.pregrada)}" y="${y + t + (b.cy - 1 - j) * (ch + S.print.pregrada)}" width="${Math.max(cw, 0.1)}" height="${Math.max(ch, 0.1)}" fill="${b.lid ? 'rgba(111,159,208,.22)' : 'rgba(0,0,0,.4)'}" stroke="var(--boxline)" stroke-opacity=".35" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
+        s += `<rect x="${x + t + i * (cw + S.print.pregrada)}" y="${y + t + (b.cy - 1 - j) * (ch + S.print.pregrada)}" width="${Math.max(cw, 0.1)}" height="${Math.max(ch, 0.1)}" fill="${b.lid ? 'var(--lidfill)' : 'var(--cell)'}" stroke="var(--boxline)" stroke-opacity=".35" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
       }
     }
     // ručka na prednjoj (donjoj) ivici
@@ -443,7 +443,7 @@ function init3d() {
   const camera = new THREE.PerspectiveCamera(35, 1, 1, 6000);
   camera.up.set(0, 0, 1);
   const controls = new THREE.OrbitControls(camera, canvas);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x555555, 0.9));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8890a8, 1.0));
   const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(-200, -400, 600); scene.add(dl);
   const dl2 = new THREE.DirectionalLight(0xffffff, 0.35); dl2.position.set(300, 300, 200); scene.add(dl2);
   const group = new THREE.Group(); scene.add(group);
@@ -471,9 +471,9 @@ function build3d() {
   const { group } = three;
   while (group.children.length) { const c = group.children.pop(); c.geometry && c.geometry.dispose(); }
   const exp = +$('o-exp').value, showLid = $('o-lid').checked;
-  const mBody = new THREE.MeshStandardMaterial({ color: 0xbfc79a, roughness: 0.6, metalness: 0.05 });
-  const mSel = new THREE.MeshStandardMaterial({ color: 0xeaff00, roughness: 0.5, metalness: 0.05 });
-  const mLid = new THREE.MeshStandardMaterial({ color: 0x5b8fbf, roughness: 0.45, transparent: true, opacity: 0.8 });
+  const mBody = new THREE.MeshStandardMaterial({ color: 0xe9e7f5, roughness: 0.6, metalness: 0.05 });
+  const mSel = new THREE.MeshStandardMaterial({ color: 0x6d64f0, roughness: 0.5, metalness: 0.05 });
+  const mLid = new THREE.MeshStandardMaterial({ color: 0x8fb6ff, roughness: 0.45, transparent: true, opacity: 0.8 });
   for (const d of DEL) {
     const R = cache.get(keyOf(d.p)); if (!R) continue;
     const hb = d.p.lid ? d.p.h - d.p.lidT : d.p.h;
@@ -486,7 +486,7 @@ function build3d() {
       group.add(l);
     }
   }
-  const fr = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S.W, S.D, S.H)), new THREE.LineBasicMaterial({ color: 0x8a8a7a }));
+  const fr = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S.W, S.D, S.H)), new THREE.LineBasicMaterial({ color: 0xb9bccb }));
   fr.position.set(S.W / 2, S.D / 2, S.H / 2); group.add(fr);
   three.resize();
   const sz = Math.max(S.W, S.D, S.H), fitKey = [S.W, S.D, S.H].join('x');
@@ -558,3 +558,13 @@ badge('Učitavam…', true);
 run();
 // za proveru u pregledaču / testove
 window.__kutije = { get S() { return S; }, get RES() { return RES; }, go, cache, setTab };
+// meni levo: označi deo strane koji se vidi
+(() => {
+  const links = [...document.querySelectorAll('.nav a')];
+  const secs = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !secs.length) return;
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  secs.forEach((s) => io.observe(s));
+})();
