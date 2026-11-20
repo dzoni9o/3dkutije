@@ -31,9 +31,10 @@
   <div class="banner"><span class="bi">i</span><p><b>Kako radi:</b> upiši mere fioke, klikni kutijicu da je urediš, pa preuzmi fajlove za štampu.</p></div>
 <main class="layout">
   <!-- 1. fioka -->
-  <section class="card space" id="s-fioka">
+  <section class="card sec" id="s-fioka" data-sec="fioka">
+    <div class="card-h"><div class="lbl"><span class="n">1</span> Tvoja fioka</div><span class="card-sum" id="sum-fioka"></span><button type="button" class="chev" aria-label="Skupi ili raširi" aria-expanded="true"></button></div>
+    <div class="card-b space">
     <div class="space-main">
-      <div class="lbl"><span class="n">1</span> Tvoja fioka</div>
       <div class="dims">
         <label class="num big"><span>Širina</span><span class="in"><input type="number" id="W" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
         <span class="x">×</span>
@@ -54,12 +55,13 @@
       </div>
       <p class="hint" id="preset-hint"></p>
     </div>
+    </div>
   </section>
 
   <!-- 2. raspored -->
-  <section class="card plan" id="s-raspored">
-    <div class="plan-head">
-      <div class="lbl"><span class="n">2</span> Raspored</div>
+  <section class="card plan sec" id="s-raspored" data-sec="raspored">
+    <div class="plan-head card-h">
+      <div class="lbl"><span class="n">2</span> Raspored</div><span class="card-sum" id="sum-raspored"></span><button type="button" class="chev" aria-label="Skupi ili raširi" aria-expanded="true"></button>
       <div class="tabs" role="tablist">
         <button type="button" role="tab" id="tab2d" aria-selected="true">Odozgo</button>
         <button type="button" role="tab" id="tab3d" aria-selected="false">3D</button>
@@ -69,6 +71,7 @@
         <label class="slider">Podigni <input type="range" id="o-exp" min="0" max="60" value="0"></label>
       </div>
     </div>
+    <div class="card-b">
     <div class="toolbar" id="ptools">
       <button type="button" class="tb" id="add-box"><i>+</i> Kutijica</button>
       <button type="button" class="tb" id="add-row"><i>+</i> Red</button>
@@ -94,11 +97,13 @@
         <div id="editor"></div>
       </aside>
     </div>
+    </div>
   </section>
 
   <!-- 3. preuzimanje -->
-  <section class="card result" id="result"><span id="s-preuzmi" class="anchor"></span>
-    <div class="lbl"><span class="n">3</span> Preuzmi</div>
+  <section class="card result sec" id="result" data-sec="preuzmi"><span id="s-preuzmi" class="anchor"></span>
+    <div class="card-h"><div class="lbl"><span class="n">3</span> Preuzmi</div><span class="card-sum" id="sum-preuzmi"></span><button type="button" class="chev" aria-label="Skupi ili raširi" aria-expanded="true"></button></div>
+    <div class="card-b">
     <div class="issues" id="issues"></div>
     <div class="sum" id="sum"></div>
     <div class="dlbar">
@@ -128,6 +133,7 @@
         <button type="button" class="btn-ghost danger" id="reset">Obriši sve i počni od početka</button>
       </div>
     </details>
+    </div>
   </section>
 </main>
 </div>

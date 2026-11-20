@@ -106,7 +106,7 @@ select { appearance: none; width: 100%; background: var(--surface) url("data:ima
 .chk input:checked::after { transform: translateX(16px); }
 
 /* ---- 1. fioka ---- */
-.space { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; padding: 20px 22px; align-items: end; }
+.space { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; padding: 0 22px 20px; align-items: end; }
 .space-main { display: flex; flex-direction: column; gap: 14px; }
 .dims { display: flex; align-items: flex-end; gap: 8px; }
 .dims .num { flex: 1; }
@@ -186,7 +186,7 @@ select { appearance: none; width: 100%; background: var(--surface) url("data:ima
 .btnrow .mini { flex: 1; }
 
 /* ---- 3. preuzimanje ---- */
-.result { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.result .card-b { padding: 0 22px 20px; display: flex; flex-direction: column; gap: 14px; }
 .issues { display: flex; flex-direction: column; gap: 8px; }
 .issue { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; border-radius: 12px; padding: 10px 14px; font-size: 13px; background: var(--surface2); border: 1px solid var(--line); }
 .issue .msg2 { color: var(--fg); flex: 1 1 260px; }
@@ -240,7 +240,11 @@ select { appearance: none; width: 100%; background: var(--surface) url("data:ima
 @media (max-width: 560px) {
   .brand { font-size: 15px; padding: 0; } .brand .mark { width: 26px; height: 26px; }
   .banner { padding: 10px 12px; } .banner p { font-size: 13px; }
-  .space, .result { padding: 16px; }
+  .space, .result .card-b { padding: 0 16px 16px; }
+  .card-h { padding-left: 16px; padding-right: 12px; }
+  .card-sum { display: none; }
+  .sec.shut .card-sum { display: block; flex-basis: 100%; order: 20; margin: -6px 0 0 34px; text-align: left; }
+  .chev { order: 2; margin-left: auto !important; }
   .dims .x { display: none; }
   .num.big input { font-size: 18px; padding-left: 10px; }
   .num.big .u, .num.big .stp { display: none; }
@@ -290,3 +294,29 @@ select { appearance: none; width: 100%; background: var(--surface) url("data:ima
   .wz-row { grid-template-columns: 1fr; }
   .wz-nav .btn { flex: 1; min-width: 0; }
 }
+
+/* ---- sekcije: skupi / raširi ---- */
+.card-h { display: flex; align-items: center; gap: 14px; padding: 16px 20px; flex-wrap: wrap; cursor: pointer; user-select: none; }
+.plan-head.card-h { padding-bottom: 12px; }
+.card-sum { flex: 1; min-width: 0; font-size: 13px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; opacity: 0; transition: opacity .15s; }
+.sec.shut .card-sum { opacity: 1; }
+.plan-head .card-sum { order: 5; }
+.chev { order: 10; flex: none; margin-left: auto; width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--line2); background: var(--surface); display: grid; place-items: center; transition: background .12s; }
+.chev::before { content: ''; width: 8px; height: 8px; border-right: 1.8px solid var(--fg2); border-bottom: 1.8px solid var(--fg2); transform: translateY(2px) rotate(-135deg); transition: transform .2s; }
+.chev:hover { background: var(--surface2); }
+.sec.shut .chev::before { transform: translateY(-2px) rotate(45deg); }
+.card-sum + .chev, .card-h .chev { margin-left: 0; }
+.card-h .lbl + .card-sum { margin-left: auto; }
+.card-b { display: block; }
+.sec.shut .card-b { display: none; }
+.sec.shut .plan-head .tabs, .sec.shut .plan-head .opts { display: none !important; }
+.sec.shut .plan-head .card-sum { flex: 1; }
+.plan-head .opts { order: 6; }
+/* grupe u uređivaču */
+.grp h4 { cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+.grp h4::after { content: ''; width: 6px; height: 6px; border-right: 1.5px solid var(--mute); border-bottom: 1.5px solid var(--mute); transform: rotate(45deg); transition: transform .15s; margin-right: 4px; }
+.grp.shut h4::after { transform: rotate(-45deg); }
+.grp.shut > :not(h4) { display: none !important; }
+.grp:hover h4 { color: var(--fg2); }
+.toggle-all { font-size: 12px; color: var(--accent); background: none; border: 0; padding: 4px 6px; border-radius: 6px; font-weight: 500; }
+.toggle-all:hover { background: var(--accent-soft); }

@@ -2,6 +2,9 @@ import { initWizard } from './wizard.js';
 import { BED, PRESETS, izCarobnjaka, akcija, normalize, pocetnoStanje, delovi, findBox, reseed, minW, minDb, presetOf } from './layout.js';
 import { stlBytes } from './geom.js';
 
+const UIK = 'kutije-ui-v1';
+let UI = { sec: {}, grp: { isk: true } };
+try { const j = JSON.parse(localStorage.getItem(UIK) || 'null'); if (j && j.sec && j.grp) UI = j; } catch (e) {}
 const $ = (id) => document.getElementById(id);
 const KEY = 'mala3d-kutije-v1';
 const fmt = (x) => (Math.round(x * 10) / 10).toString().replace('.', ',');
@@ -101,30 +104,30 @@ function buildEditor() {
   builtFor = sel;
   $('editor').innerHTML = `<div class="editor">
     <div class="ed-title" id="ed-title"></div>
-    <div class="grp"><h4>Veličina</h4>
+    <div class="grp" data-g="vel"><h4>Veličina</h4>
       <div class="row3">${field('w', 'Širina', 'mm')}${field('d', 'Dubina', 'mm')}${field('h', 'Visina', 'mm')}</div>
     </div>
-    <div class="grp"><h4>Pregrade unutra</h4>
+    <div class="grp" data-g="preg"><h4>Pregrade unutra</h4>
       <div class="row2">
         <label class="num"><span>Levo–desno</span><span class="in"><input type="number" data-k="cx" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
         <label class="num"><span>Napred–nazad</span><span class="in"><input type="number" data-k="cy" min="1" max="8" step="1" inputmode="numeric">${STEP}</span></label>
       </div>
     </div>
-    <div class="grp"><h4>Izgled</h4>
+    <div class="grp" data-g="izg"><h4>Izgled</h4>
       <div class="seg" id="ed-tex" role="group" aria-label="Zidovi">
         <button type="button" data-tex="nema">Glatki</button><button type="button" data-tex="zlebovi">Žlebovi</button><button type="button" data-tex="pruge">Pruge</button>
       </div>
       <label class="chk"><input type="checkbox" data-k="rub"> Rub pri vrhu</label>
       <div class="row2">${field('nagib', 'Kosi zid', 'mm')}${field('r', 'Zaobljen ugao', 'mm')}</div>
     </div>
-    <div class="grp"><h4>Poklopac i ručka</h4>
+    <div class="grp" data-g="pok"><h4>Poklopac i ručka</h4>
       <label class="chk"><input type="checkbox" data-k="lid"> Poklopac</label>
       <div class="seg" id="ed-handle" role="group" aria-label="Ručka">
         <button type="button" data-handle="nema">Bez ručke</button><button type="button" data-handle="rupa">Rupa za prst</button><button type="button" data-handle="rucka">Ručka</button>
       </div>
       <p class="hint" id="ed-handle-hint"></p>
     </div>
-    <div class="grp"><h4>Za iskusne</h4>
+    <div class="grp" data-g="isk"><h4>Za iskusne</h4>
       <div class="row2">${field('zid', 'Debljina zida', 'mm', 'placeholder="opšta"')}</div>
     </div>
     <div class="grp">
@@ -135,6 +138,7 @@ function buildEditor() {
       </div>
     </div>
   </div>`;
+  applyGroups();
   syncEditor();
 }
 function syncEditor() {
@@ -568,3 +572,40 @@ window.__kutije = { get S() { return S; }, get RES() { return RES; }, go, cache,
   }, { rootMargin: '-40% 0px -55% 0px' });
   secs.forEach((s) => io.observe(s));
 })();
+
+// ------------------------------------------------------------------ skupi / raširi
+const saveUI = () => { try { localStorage.setItem(UIK, JSON.stringify(UI)); } catch (e) {} };
+function applySecs() {
+  document.querySelectorAll('.sec').forEach((s) => {
+    const shut = !!UI.sec[s.dataset.sec];
+    s.classList.toggle('shut', shut);
+    const b = s.querySelector('.chev'); if (b) { b.setAttribute('aria-expanded', String(!shut)); b.title = shut ? 'Raširi' : 'Skupi'; }
+  });
+}
+function applyGroups() { document.querySelectorAll('#editor .grp[data-g]').forEach((g) => g.classList.toggle('shut', !!UI.grp[g.dataset.g])); }
+document.querySelectorAll('.sec > .card-h').forEach((h) => h.addEventListener('click', (e) => {
+  if (e.target.closest('button:not(.chev), input, label, select, a')) return;
+  const s = h.parentElement, k = s.dataset.sec;
+  UI.sec[k] = !UI.sec[k]; saveUI(); applySecs();
+  if (!UI.sec[k] && k === 'raspored') { draw2d(); if (three) requestAnimationFrame(() => three.resize()); }
+}));
+$('editor').addEventListener('click', (e) => {
+  const h = e.target.closest('.grp[data-g] > h4'); if (!h) return;
+  const k = h.parentElement.dataset.g; UI.grp[k] = !UI.grp[k]; saveUI(); applyGroups();
+});
+// klik u meniju levo uvek raširi sekciju
+document.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => {
+  const s = document.querySelector(a.getAttribute('href')); const sec = s && s.closest('.sec');
+  if (sec && UI.sec[sec.dataset.sec]) { UI.sec[sec.dataset.sec] = false; saveUI(); applySecs(); }
+}));
+function syncSums() {
+  const bedName = { 256: 'Bambu A1', 180: 'A1 mini', 220: 'štampač 220 mm', 350: 'veliki štampač' }[S.bed || 256] || `${S.bed} mm`;
+  $('sum-fioka').textContent = `${fmt(S.W)} × ${fmt(S.D)} × ${fmt(S.H)} mm · ${bedName} · ${presetOf(S) === 'lagana' ? 'štedljive' : 'čvrste'}`;
+  const n = S.rows.reduce((a, r) => a + r.boxes.length, 0), lids = S.rows.reduce((a, r) => a + r.boxes.filter((b) => b.lid).length, 0);
+  $('sum-raspored').textContent = `${n} kutijica u ${S.rows.length} ${S.rows.length === 1 ? 'redu' : 'reda'}${lids ? ` · ${lids} sa poklopcem` : ''}`;
+  const errs = RES.issues.filter((i) => i.sev === 'err').length;
+  $('sum-preuzmi').textContent = errs ? `${errs} ${errs === 1 ? 'problem' : 'problema'} za rešavanje` : 'Sve je u redu, spremno za preuzimanje';
+}
+const _renderAll = renderAll;
+renderAll = function (k) { _renderAll(k); syncSums(); };
+applySecs(); syncSums();
