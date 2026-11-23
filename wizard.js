@@ -20,7 +20,7 @@ const DRAWER = `<svg viewBox="-30 0 360 190" class="wz-draw" aria-hidden="true">
   <g fill="none" stroke="#b7bac8" stroke-width="2">
     <path d="M40 70 L200 70 L270 30 L110 30 Z"/><path d="M40 70 L40 150 L200 150 L200 70"/><path d="M200 150 L270 110 L270 30"/>
   </g>
-  <g stroke="#4f46e5" stroke-width="2" fill="#4f46e5" font-family="Inter,sans-serif" font-size="13">
+  <g stroke="#2563eb" stroke-width="2" fill="#2563eb" font-family="Inter,sans-serif" font-size="13">
     <path d="M40 168 L200 168 M40 163 L40 173 M200 163 L200 173" fill="none"/><text x="120" y="184" text-anchor="middle" stroke="none">širina</text>
     <path d="M214 150 L270 117 M214 146 L210 154 M270 113 L266 121" fill="none"/><text x="262" y="142" stroke="none">dubina</text>
     <path d="M22 70 L22 150 M17 70 L27 70 M17 150 L27 150" fill="none"/><text x="14" y="115" text-anchor="end" stroke="none">visina</text>

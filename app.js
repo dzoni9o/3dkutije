@@ -51,7 +51,7 @@ const wiz = initWizard($('wiz'), {
 });
 function openWizard() { wiz.open({ W: S.W, D: S.D, H: S.H, bed: S.bed || 256 }); }
 $('wiz-open').addEventListener('click', openWizard);
-function syncAllLids() { const all = S.rows.every((r) => r.boxes.every((b) => b.lid)); $('all-lids').setAttribute('aria-pressed', String(all)); $('all-lids').textContent = all ? 'Skini poklopce' : 'Svi poklopci'; }
+function syncAllLids() { const all = S.rows.every((r) => r.boxes.every((b) => b.lid)); $('all-lids').setAttribute('aria-pressed', String(all)); $('all-lids-t').textContent = all ? 'Skini poklopce' : 'Svi poklopci'; }
 $('all-lids').addEventListener('click', () => { const all = S.rows.every((r) => r.boxes.every((b) => b.lid)); go({ act: 'allLids', v: !all }); });
 $('add-row').addEventListener('click', () => go({ act: 'addRow' }));
 $('add-box').addEventListener('click', () => { const f = findBox(S, sel); go({ act: 'addBox', rowId: (f.row || S.rows[S.rows.length - 1]).id }); const r = (f.row || S.rows[S.rows.length - 1]); sel = r.boxes[r.boxes.length - 1].id; renderAll(); });
@@ -475,8 +475,8 @@ function build3d() {
   const { group } = three;
   while (group.children.length) { const c = group.children.pop(); c.geometry && c.geometry.dispose(); }
   const exp = +$('o-exp').value, showLid = $('o-lid').checked;
-  const mBody = new THREE.MeshStandardMaterial({ color: 0xe9e7f5, roughness: 0.6, metalness: 0.05 });
-  const mSel = new THREE.MeshStandardMaterial({ color: 0x6d64f0, roughness: 0.5, metalness: 0.05 });
+  const mBody = new THREE.MeshStandardMaterial({ color: 0xe8edf5, roughness: 0.6, metalness: 0.05 });
+  const mSel = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.5, metalness: 0.05 });
   const mLid = new THREE.MeshStandardMaterial({ color: 0x8fb6ff, roughness: 0.45, transparent: true, opacity: 0.8 });
   for (const d of DEL) {
     const R = cache.get(keyOf(d.p)); if (!R) continue;
@@ -604,8 +604,12 @@ function syncSums() {
   const n = S.rows.reduce((a, r) => a + r.boxes.length, 0), lids = S.rows.reduce((a, r) => a + r.boxes.filter((b) => b.lid).length, 0);
   $('sum-raspored').textContent = `${n} kutijica u ${S.rows.length} ${S.rows.length === 1 ? 'redu' : 'reda'}${lids ? ` · ${lids} sa poklopcem` : ''}`;
   const errs = RES.issues.filter((i) => i.sev === 'err').length;
+  const st = (k, v) => { const el = document.querySelector(`.nav a[data-step="${k}"]`); if (el) el.dataset.state = v; };
+  st('fioka', 'done'); st('raspored', errs ? 'err' : 'done'); st('preuzmi', errs ? '' : 'ready');
   $('sum-preuzmi').textContent = errs ? `${errs} ${errs === 1 ? 'problem' : 'problema'} za rešavanje` : 'Sve je u redu, spremno za preuzimanje';
 }
 const _renderAll = renderAll;
 renderAll = function (k) { _renderAll(k); syncSums(); };
 applySecs(); syncSums();
+
+requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('ready')));

@@ -7,7 +7,7 @@
 <title>3D kutije · kutijice za fioke i police</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="./style.css">
 </head>
@@ -16,24 +16,24 @@
 
 <div class="app">
 <aside class="side">
-  <div class="brand"><span class="mark"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 8l8-4 8 4v8l-8 4-8-4z M4 8l8 4 8-4 M12 12v8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>3D kutije</div>
+  <div class="brand"><span class="mark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg></span>3D kutije</div>
   <div class="ws"><span>Projekat</span><b id="ws-name">Moja fioka</b></div>
   <nav class="nav">
-    <a href="#s-fioka" class="on"><i class="ic c1">▭</i> Fioka</a>
-    <a href="#s-raspored"><i class="ic c2">▦</i> Raspored</a>
-    <a href="#s-preuzmi"><i class="ic c3">↓</i> Preuzmi</a>
+    <a href="#s-fioka" class="on" data-step="fioka"><span class="st">1</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></svg><span class="t">Fioka</span></a>
+    <a href="#s-raspored" data-step="raspored"><span class="st">2</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="t">Raspored</span></a>
+    <a href="#s-preuzmi" data-step="preuzmi"><span class="st">3</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 10l5 5 5-5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg><span class="t">Preuzmi</span></a>
   </nav>
   <div class="side-foot">
-    <button type="button" class="nav-btn" id="wiz-open"><i class="ic c4">↺</i> Počni iznova</button>
+    <button type="button" class="nav-btn" id="wiz-open"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="t">Počni iznova</span></button>
   </div>
 </aside>
 <div class="main">
-  <div class="banner"><span class="bi">i</span><p><b>Kako radi:</b> upiši mere fioke, klikni kutijicu da je urediš, pa preuzmi fajlove za štampu.</p></div>
+  <div class="banner"><span class="bi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><p><b>Kako radi:</b> upiši mere fioke, klikni kutijicu da je urediš, pa preuzmi fajlove za štampu.</p></div>
 <main class="layout">
   <!-- 1. fioka -->
   <section class="card sec" id="s-fioka" data-sec="fioka">
     <div class="card-h"><div class="lbl"><span class="n">1</span> Tvoja fioka</div><span class="card-sum" id="sum-fioka"></span><button type="button" class="chev" aria-label="Skupi ili raširi" aria-expanded="true"></button></div>
-    <div class="card-b space">
+    <div class="card-b"><div class="cb-in space">
     <div class="space-main">
       <div class="dims">
         <label class="num big"><span>Širina</span><span class="in"><input type="number" id="W" inputmode="decimal" step="any"><span class="u">mm</span></span></label>
@@ -55,7 +55,7 @@
       </div>
       <p class="hint" id="preset-hint"></p>
     </div>
-    </div>
+    </div></div>
   </section>
 
   <!-- 2. raspored -->
@@ -71,18 +71,18 @@
         <label class="slider">Podigni <input type="range" id="o-exp" min="0" max="60" value="0"></label>
       </div>
     </div>
-    <div class="card-b">
+    <div class="card-b"><div class="cb-in">
     <div class="toolbar" id="ptools">
-      <button type="button" class="tb" id="add-box"><i>+</i> Kutijica</button>
-      <button type="button" class="tb" id="add-row"><i>+</i> Red</button>
-      <button type="button" class="tb" id="grid-toggle"><i>▦</i> Mreža</button>
+      <button type="button" class="tb" id="add-box"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Kutijica</button>
+      <button type="button" class="tb" id="add-row"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/></svg>Red</button>
+      <button type="button" class="tb" id="grid-toggle"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Mreža</button>
       <span class="gridform" id="gridform" hidden>
         <input type="number" id="g-c" value="3" min="1" max="12" inputmode="numeric" aria-label="kolone"><span>×</span>
         <input type="number" id="g-r" value="2" min="1" max="12" inputmode="numeric" aria-label="redovi">
         <button type="button" class="tb on" id="grid">Napravi</button>
       </span>
       <span class="sp stage-hint">Klikni kutijicu da je urediš. Vuci plavu crticu da promeniš veličinu.</span>
-      <button type="button" class="tb" id="all-lids" aria-pressed="false">Svi poklopci</button>
+      <button type="button" class="tb" id="all-lids" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18M5 9V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M5 9l1 10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-10"/></svg><span id="all-lids-t">Svi poklopci</span></button>
     </div>
     <div class="planwrap" id="planwrap">
       <div class="stage" id="stage">
@@ -97,17 +97,17 @@
         <div id="editor"></div>
       </aside>
     </div>
-    </div>
+    </div></div>
   </section>
 
   <!-- 3. preuzimanje -->
   <section class="card result sec" id="result" data-sec="preuzmi"><span id="s-preuzmi" class="anchor"></span>
     <div class="card-h"><div class="lbl"><span class="n">3</span> Preuzmi</div><span class="card-sum" id="sum-preuzmi"></span><button type="button" class="chev" aria-label="Skupi ili raširi" aria-expanded="true"></button></div>
-    <div class="card-b">
+    <div class="card-b"><div class="cb-in">
     <div class="issues" id="issues"></div>
     <div class="sum" id="sum"></div>
     <div class="dlbar">
-      <button type="button" class="btn" id="dl" disabled>Preuzmi fajlove za štampu</button>
+      <button type="button" class="btn" id="dl" disabled><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 10l5 5 5-5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>Preuzmi fajlove za štampu</button>
       <span class="msg" id="dlmsg"></span>
     </div>
     <details class="fold"><summary>Kako da štampam?</summary>
@@ -133,7 +133,7 @@
         <button type="button" class="btn-ghost danger" id="reset">Obriši sve i počni od početka</button>
       </div>
     </details>
-    </div>
+    </div></div>
   </section>
 </main>
 </div>
